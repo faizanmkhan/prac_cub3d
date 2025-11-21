@@ -6,7 +6,7 @@
 /*   By: faikhan <faikhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 23:54:03 by faikhan           #+#    #+#             */
-/*   Updated: 2025/11/20 23:54:05 by faikhan          ###   ########.fr       */
+/*   Updated: 2025/11/21 21:47:05 by faikhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,20 @@ static char *default_map[] = {
 "1111111111111111111111111",
 "1000000000110000000000001",
 "1011000001110000000000001",
-"10010000000D0000000000001",
-"1111111110110000011100001",
-"100000000011011111D111111",
-"1111D111111111D11100000011111",
-"11110111111111011101010010001",
-"11000000110101011100000010001",
-"10000000000000001100000010001",
-"10000000000000001101010010001",
-"11000001110101011111011110S01",
-"11110111 1110101 101111010001",
-"11111111 1111111 11111111AAA1",
+"1001000000011000000000001",
+"1110000000000000000000001",
+"1000000000110111111101111",
+"1000000000000000000000001",
+"1111011111111101110010001",
+"1100000011010101000010001",
+"1000000000000000100010001",
+"1000000000000000110010001",
+"1100000000000000000000001",
+"1111111111110101110110001",
 	NULL
 };
 
-int	min_init(t_data *data)
+static int	init_mlx_window_image(t_data *data)
 {
 	data->screen_x = 640;
 	data->screen_y = 480;
@@ -52,17 +51,38 @@ int	min_init(t_data *data)
 		fprintf(stderr, "Error: image creation failed\n");
 		return (1);
 	}
-	/* map */
+	return (0);
+}
+
+static int	init_map(t_data *data)
+{
 	int i = 0;
-	while (default_map[i]) i++;
+
+	while (default_map[i])
+		i++;
 	data->rows = i;
 	data->cols = (int)strlen(default_map[0]);
 	data->map = malloc(sizeof(char *) * (data->rows + 1));
+	if (!data->map)
+	{
+		fprintf(stderr, "Error: malloc failed for map\n");
+		return (1);
+	}
 	for (i = 0; i < data->rows; i++)
+	{
 		data->map[i] = strdup(default_map[i]);
+		if (!data->map[i])
+		{
+			fprintf(stderr, "Error: strdup failed for map row %d\n", i);
+			return (1);
+		}
+	}
 	data->map[data->rows] = NULL;
+	return (0);
+}
 
-	/* player */
+static void	init_player_and_camera(t_data *data)
+{
 	data->player.x = 5.0;
 	data->player.y = 5.0;
 	/* facing north-ish */
@@ -72,10 +92,22 @@ int	min_init(t_data *data)
 	data->plane.x = 0.0;
 	data->plane.y = 0.66;
 	data->movespeed = 0.12;
+}
 
-	/* colors */
+static void	init_colors(t_data *data)
+{
 	data->ceiling_color = 0x87CEEB; /* skyblue */
 	data->floor_color = 0x707070; /* gray */
+}
+
+int	min_init(t_data *data)
+{
+	if (init_mlx_window_image(data) != 0)
+		return (1);
+	if (init_map(data) != 0)
+		return (1);
+	init_player_and_camera(data);
+	init_colors(data);
 	return (0);
 }
 

@@ -6,7 +6,7 @@
 /*   By: faikhan <faikhan@student.42.fr>            +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 23:54:13 by faikhan           #+#    #+#             */
-/*   Updated: 2025/11/20 23:54:15 by faikhan          ###   ########.fr       */
+/*   Updated: 2025/11/21 21:53:01 by faikhan          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	main(int argc, char **argv)
 	/* center mouse not required here; we use keys */
 	mlx_hook(data.win_ptr, 2, 1L << 0, &min_keypress, &data);
 	mlx_hook(data.win_ptr, 17, 0, min_close, &data);
-	mlx_loop_hook(data.mlx_ptr, (int (*)(void *))min_render, &data);
+	mlx_loop_hook(data.mlx_ptr, min_render, &data);
 	mlx_loop(data.mlx_ptr);
 	return (0);
 }
